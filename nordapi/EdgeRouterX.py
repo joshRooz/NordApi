@@ -7,7 +7,7 @@ import fileinput
 def main(argv):
     country = None
     try:
-        opts, args = getopt.getopt(argv, "hc", ["country="])
+        opts, args = getopt.getopt(argv, "h:c:", ["country="])
     except getopt.GetoptError:
         print('EdgeRouterX.py -c <country>')
         sys.exit(2)
@@ -21,12 +21,12 @@ def main(argv):
     assert type(country) == str, 'Invalid Country: EdgeRouterX.py -h'
 
     # 1. Download the recommended config file from NordVPN
-    uk = OpenVpnUdp.OpenVpnUdp()
-    ovpn = uk.get_file(country)
+    ovpn = OpenVpnUdp.OpenVpnUdp()
+    ovpnfile = ovpn.get_file(country)
 
     # 2. Replace the inline username and password fields with a file path
     #    Disable ability for OpenVPN provider to change routes in the firewall
-    with fileinput.FileInput(ovpn, inplace=True) as file:
+    with fileinput.FileInput(ovpnfile, inplace=True) as file:
         for line in file:
             line = line.replace(
                 'auth-user-pass',
