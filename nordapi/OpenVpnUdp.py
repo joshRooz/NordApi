@@ -13,8 +13,19 @@ class OpenVpnUdp(NordApi):
         self.load = json[0]['load']
 
         self.url = "https://downloads.nordcdn.com"
-        endpoint = '/configs/files/ovpn_udp/servers/'
-        + self.servername + '.udp.ovpn'
+        endpoint = (
+            '/configs/files/ovpn_udp/servers/'
+            + self.servername
+            + '.udp.ovpn'
+        )
 
         response = NordApi.get_request(self, endpoint)
-        open(self.servername + '.udp.ovpn', 'wb').write(response.content)
+
+        filename = self.servername + '.udp.ovpn'
+        writebytes = open(filename, 'wb')
+        try:
+            writebytes.write(response.content)
+        finally:
+            writebytes.close()
+
+        return filename
